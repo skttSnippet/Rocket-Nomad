@@ -1,6 +1,6 @@
 # Rocket_Nomad
 http://www.sharemygame.com/share/a30d715e-2dbd-4d92-b7be-287635543ad7
-(expire 3/16)
+(expire Mar 16)
 
 
 ![level1](https://user-images.githubusercontent.com/24993404/36201384-b3d3d1e0-1134-11e8-8694-3c435ed9f73d.gif)
