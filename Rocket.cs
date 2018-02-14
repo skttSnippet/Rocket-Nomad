@@ -22,6 +22,7 @@ public class Rocket : MonoBehaviour {
 
     enum State { Alive, Dying, Transcending};
     State state = State.Alive;
+    bool collisionsDisabled = false; //Collision is on by default
 
     // Use this for initialization
     void Start ()
@@ -38,16 +39,24 @@ public class Rocket : MonoBehaviour {
             RespondToThrustInput();
             RespondToRotateInput();
         }
-        //todo only if debug on
-        RespondToDebugKeys();
+
+        if (Debug.isDebugBuild)//when "development build" check box is on in Build setting
+        {
+            RespondToDebugKeys();
+        }
+        
 
     }
 
     private void RespondToDebugKeys()
     {
-        if (Input.GetKeyDown(KeyCode.L)) ;
+        if (Input.GetKeyDown(KeyCode.L))
         {
-
+            LoadNextLevel();
+        }
+        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            collisionsDisabled = !collisionsDisabled; // var = !var. if true, go false. if false, go true. Basically like a toggle
         }
 
     }
@@ -56,12 +65,11 @@ public class Rocket : MonoBehaviour {
     void OnCollisionEnter(Collision collision)
     {
 
-        if (state != State.Alive){return;} // ignore collision unless alive
+        if (state != State.Alive || collisionsDisabled) {return;}
 
         switch (collision.gameObject.tag)//switch based on the collided object's tag
         {
             case "Friendly":
-                print("OK");
                 break;
             case "Finish":
                 StartSuccessSequence();
@@ -93,7 +101,13 @@ public class Rocket : MonoBehaviour {
 
     private void LoadNextLevel()
     {
-        SceneManager.LoadScene(1);// todo allow for more than 2 levels
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        int nextSceneIndex = currentSceneIndex + 1;
+        if (nextSceneIndex == SceneManager.sceneCountInBuildSettings)
+        {
+            nextSceneIndex = 0;
+        }
+        SceneManager.LoadScene(nextSceneIndex);// todo allow for more than 2 levels
     }
 
     private void LoadFirstLevel()
